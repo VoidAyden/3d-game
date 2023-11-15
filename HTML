@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple FPS Game with Terminal</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+    #terminal {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background-color: black;
+      color: white;
+      font-family: monospace;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    #terminal input {
+      background: transparent;
+      border: none;
+      color: white;
+      font-family: monospace;
+      width: calc(100% - 20px);
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <div id="terminal">
+    <p>Welcome to the terminal!</p>
+    <input type="text" placeholder="Type your command...">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+  <script>
+    // Your Three.js FPS game code here for the 3D environment
+    // ...
+    // Example: Create a basic Three.js scene with a cube
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gameCanvas') });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+
+    camera.position.z = 5;
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Example terminal functionality
+    const terminalInput = document.querySelector('#terminal input');
+    terminalInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        const command = terminalInput.value;
+        // Handle commands (e.g., display a message)
+        const terminal = document.querySelector('#terminal');
+        const p = document.createElement('p');
+        p.textContent = '> ' + command;
+        terminal.appendChild(p);
+        terminalInput.value = '';
+      }
+    });
+  </script>
+</body>
+</html>
