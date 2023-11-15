@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Terminal Background with 3D Radar</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #000;
+      color: #0f0;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #terminal {
+      width: 400px;
+      height: 300px;
+      margin: auto;
+      padding: 20px;
+      background-color: black;
+      color: lime;
+      border: 1px solid lime;
+      border-radius: 5px;
+      box-shadow: 0 0 20px lime;
+      overflow-y: scroll;
+      display: none; /* Initially hidden */
+    }
+    canvas {
+      display: block;
+      position: absolute;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal">
+    <p>Welcome to the terminal!</p>
+    <p id="dateTime"></p>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+  <script>
+    // Terminal displaying 24-hour time and date
+    function updateDateTime() {
+      const now = new Date();
+      const dateStr = now.toDateString();
+      const timeStr = now.toLocaleTimeString('en-US', {hour12: false});
+      document.getElementById('dateTime').textContent = `Date: ${dateStr}\nTime: ${timeStr}`;
+    }
+
+    setInterval(updateDateTime, 1000); // Update time every second
+
+    // Your Three.js code for the 3D radar scan effect
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const geometry = new THREE.SphereGeometry(10, 32, 32);
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+
+    camera.position.z = 30;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      sphere.rotation.x += 0.01;
+      sphere.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Toggle terminal box on T key press
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 't' || event.key === 'T') {
+        const terminal = document.getElementById('terminal');
+        terminal.style.display = (terminal.style.display === 'none') ? 'block' : 'none'; // Toggle display
+      } else if (event.key === 'Escape') {
+        const terminal = document.getElementById('terminal');
+        terminal.style.display = 'none'; // Hide terminal box
+      }
+    });
+  </script>
+</body>
+</html>
